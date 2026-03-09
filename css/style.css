@@ -34,7 +34,7 @@
     --active-bnt: #434449;
     --bg-main: #282828;
     --main-color: #333333;
-    --bg-dem: #D5D5D5;
+    --bg-dem: #C0C0C0;
     --success: #27ae60;
     --error: #e74c3c;
     --btn-color: #282A30;
@@ -761,14 +761,14 @@ header {
 
 #pixel-canvas {
     cursor: crosshair;
-    background-color: #A2A2A2;
+    background-color: #808080;
     background-image:
         linear-gradient(45deg, var(--bg-dem) 25%, transparent 25%),
         linear-gradient(-45deg, var(--bg-dem) 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, var(--bg-dem) 75%),
         linear-gradient(-45deg, transparent 75%, var(--bg-dem) 75%);
-    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
-    background-size: 16px 16px;
+    background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+    background-size: 10px 10px;
     border: 3.9px solid #000;
     box-sizing: border-box;
     image-rendering: pixelated;
