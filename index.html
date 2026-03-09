@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title translate="no">Layrer Art – Advanced Online Pixel Art Editor</title>
+    
+    <meta name="description" content="Layrer Art is a powerful browser-based pixel art editor with layers, grids, onion skin and advanced tools for creating sprites, tilesets and game assets online.">
+    
+    <meta name="keywords" content="pixel art editor, sprite editor, pixel art tool, online pixel art editor, sprite creator, game assets, tileset editor">
+    
+    <link href="https://fonts.cdnfonts.com/css/kenney" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+<div class="logo">
+    <img class="icon-xadrez" src="icon-site/xadrez.png" alt="Chess icon">
+    <span translate="no">
+        <span>L</span>
+        <span>a</span>
+        <span>y</span>
+        <span>r</span>
+        <span>e</span>
+        <span>r</span>
+        <span class="word-space"></span> 
+        <span>A</span>
+        <span>r</span>
+        <span>t</span>
+    </span>
+</div>
+    
+
+    
+    <button class="menu-toggle mobile-only" aria-label="Open menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    
+    <button class="panel-toggle-btn mobile-only" id="simple-panel-toggle">
+    <i class="fas fa-chevron-up"></i>
+</button>
+    
+    <div class="main-menu">
+        <button class="menu-btn" onclick="showModal('new-project-modal')" title="Create new project">
+            <i class="fas fa-plus"></i> New
+        </button>
+        
+
+        <button class="menu-btn btn-galeria-salvar" onclick="salvarProjetoPixelArt()" title="Save current project">
+            <i class="fas fa-save"></i> Save
+        </button>
+        
+        <button class="menu-btn btn-galeria-abrir" onclick="abrirGaleriaPixelArt()" title="Open project gallery">
+            <i class="fas fa-images"></i> Gallery
+        </button>
+        
+        <button class="menu-btn" onclick="exportImage()" title="Export image">
+            <i class="fas fa-download"></i> Export
+        </button>
+        
+        <button class="menu-btn" onclick="showModal('high-res-export-modal')" title="Export in high resolution">
+            <i class="fas fa-expand-arrows-alt"></i> High Resolution
+        </button>
+        
+        <button class="menu-btn" onclick="loadReferenceImage()" title="Load reference image">
+            <i class="fas fa-image"></i> Reference
+        </button>
+        
+        <div class="dropdown">
+            <button class="menu-btn" title="Tile Grid controls">
+                <i class="fas fa-border-all"></i> Tile Grid
+            </button>
+            <div class="dropdown-content" style="min-width: 180px;">
+                <div style="padding: 8px;">
+                    <button class="btn btn-small" onclick="toggleTileGrid()" style="width: 100%; margin-bottom: 8px;">
+                        <i class="fas fa-border-all"></i> Toggle
+                    </button>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 12px;">Size:</span>
+                        <select onchange="changeTileGridSize(this.value)" style="flex: 1; padding: 4px; background: #333; color: white; border: 1px solid #555;">
+                            <option value="1x1">1×1</option>
+                            <option value="2x2" selected>2×2</option>
+                            <option value="4x4">4×4</option>
+                            <option value="8x8">8×8</option>
+                            <option value="16x16">16×16</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="menu-btn" onclick="toggleOnionSkin()" title="Toggle onion skin">
+            <i class="fas fa-layer-group"></i> Onion
+        </button>
+        
+      
+        
+        <div class="dropdown">
+            <button class="menu-btn" title="Mirror options">
+                <i class="fas fa-sync-alt"></i> Mirror
+            </button>
+            <div class="dropdown-content">
+                <a href="#" onclick="toggleMirror('x'); return false;" title="Mirror horizontally">Horizontal</a>
+                <a href="#" onclick="toggleMirror('y'); return false;" title="Mirror vertically">Vertical</a>
+            </div>
+        </div>
+        
+        <button class="menu-btn" onclick="toggleSnapSystem()" title="Toggle snap system">
+            <i class="fas fa-magnet"></i> Snap
+        </button>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="toolbar">
+        <div class="tool-group">
+            
+            <div class="tools">
+                <button class="tool active" onclick="selectTool('pencil')" data-tooltip="Pencil (Key: 1)" title="Select pencil">
+                    <div class="tool-icon"><i class="fas fa-pencil-alt"></i></div>
+                    <div class="tool-label">Pencil</div>
+                </button>
+                <button class="tool" onclick="selectTool('eraser')" data-tooltip="Eraser (Key: 2)" title="Select eraser">
+                    <div class="tool-icon"><i class="fas fa-eraser"></i></div>
+                    <div class="tool-label">Eraser</div>
+                </button>
+                <button class="tool" onclick="selectTool('picker')" data-tooltip="Eyedropper (Key: 5)" title="Select eyedropper">
+                    <div class="tool-icon"><i class="fas fa-eye-dropper"></i></div>
+                    <div class="tool-label">Dropper</div>
+                </button>
+                <button class="tool" onclick="selectTool('fill')" data-tooltip="Paint Bucket (Key: 3)" title="Select paint bucket">
+                    <div class="tool-icon"><i class="fas fa-fill-drip"></i></div>
+                    <div class="tool-label">Bucket</div>
+                </button>
+                
+                <button class="tool" onclick="selectTool('line')" data-tooltip="Line (Key: 4)" title="Select line">
+                    <div class="tool-icon"><i class="fas fa-slash"></i></div>
+                    <div class="tool-label">Line</div>
+                </button>
+                <button class="tool" onclick="selectTool('selection')" data-tooltip="Rectangular Selection (Key: 6)" title="Rectangular selection">
+                    <div class="tool-icon"><i class="fas fa-vector-square"></i></div>
+                    <div class="tool-label">Selection</div>
+                </button>
+                <button class="tool" onclick="selectTool('shape')" data-tool="shape" 
+                        data-tooltip="Geometric Shapes (Click for menu)" 
+                        title="Geometric Shapes - Click for menu">
+                    <div class="tool-icon"><i class="fas fa-shapes"></i></div>
+                    <div class="tool-label">Shapes</div>
+                </button>
+                
+                <button class="tool" onclick="selectTool('colorReplace')" data-tooltip="Replace Color (Key: R)" title="Replace color">
+                    <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="tool-label">Replace Color</div>
+                </button>
+                <button class="tool" onclick="selectTool('blur')" data-tooltip="Blur (Key: 7)" title="Blur tool">
+                    <div class="tool-icon"><i class="fas fa-blur"></i></div>
+                    <div class="tool-label">Blur</div>
+                </button>
+                
+                <button class="tool" onclick="selectTool('glow')" data-tooltip="Glow (Key: G)" title="Glow tool">
+                    <div class="tool-icon"><i class="fas fa-star"></i></div>
+                    <div class="tool-label">Glow</div>
+                </button>
+                <button class="tool" onclick="selectTool('dither')" data-tooltip="Dither (Key: D)" title="Dither tool">
+                    <div class="tool-icon"><i class="fas fa-th-large"></i></div>
+                    <div class="tool-label">Dither</div>
+                </button>
+                <button class="tool" onclick="selectTool('texture')" data-tooltip="Texture (Key: T)" title="Texture tool">
+                    <div class="tool-icon"><i class="fas fa-texture"></i></div>
+                    <div class="tool-label">Texture</div>
+                </button>
+                
+                <button class="tool" onclick="selectTool('gradient')" data-tooltip="Gradient (Key: 8)" title="Gradient tool">
+                    <div class="tool-icon"><i class="fas fa-fill"></i></div>
+                    <div class="tool-label">Gradient</div>
+                </button>
+                <button class="tool" onclick="selectTool('stamp')" data-tooltip="Stamp (Key: 9)" title="Stamp tool">
+                    <div class="tool-icon"><i class="fas fa-stamp"></i></div>
+                    <div class="tool-label">Stamp</div>
+                </button>
+                <button class="tool" onclick="selectTool('noise')" data-tooltip="Noise (Key: N)" title="Noise tool">
+                    <div class="tool-icon"><i class="fas fa-wave-square"></i></div>
+                    <div class="tool-label">Noise</div>
+                </button>
+                <button class="tool" onclick="selectTool('warp')" data-tooltip="Warp (Key: W)" title="Warp tool">
+                    <div class="tool-icon"><i class="fas fa-expand-alt"></i></div>
+                    <div class="tool-label">Warp</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="tools-panel">
+            <div class="tool-settings glow-settings" style="display: none;">
+    <div class="tool-setting">
+        <label>Ray of Brilliance:</label>
+        <input type="range" id="glow-radius" min="1" max="20" value="5">
+        <span id="glow-radius-value">5</span>
+    </div>
+    <div class="tool-setting">
+        <label>Intensity:</label>
+        <input type="range" id="glow-intensity" min="0" max="100" value="50">
+        <span id="glow-intensity-value">50%</span>
+    </div>
+    <div class="tool-setting">
+        <label>Color of the Glow:</label>
+        <input type="color" id="glow-color" value="#ffffff">
+    </div>
+</div>
+
+        </div>
+    </div>
+
+    <div class="workspace">
+        <div class="workspace-controls">
+
+            <div class="zoom-controls">
+                <button class="btn mobile-zoom-btn" onclick="zoomOut()" title="Zoom out (Pinch)">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <span id="zoom-level">100%</span>
+                <button class="btn mobile-zoom-btn" onclick="zoomIn()" title="Zoom in (Pinch)">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="btn btn-secondary mobile-fit-btn" onclick="fitToScreen()" title="Fit to screen size">
+                    <i class="fas fa-expand-alt"></i>
+                </button>
+            </div>
+            
+            
+            <div class="brush-controls">
+                <div class="slider-container">
+                    <label>Pencil: <span id="brush-size-value">1</span></label>
+                    <input type="range" id="brush-size" min="1" max="32" value="1" 
+                           title="Adjust brush size" class="brush-slider">
+                </div>
+            </div>
+            
+            <div class="pan-controls-stacked">
+                <button class="btn" onclick="togglePanMode()" id="pan-toggle-btn" title="Toggle pan mode (Ctrl+P)">
+                    <i class="fas fa-hand-paper"></i>
+                    <span>Move</span>
+                </button>
+                <button class="btn btn-secondary" onclick="resetPanPosition()" title="Center canvas">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>Centralize</span>
+                </button>
+            </div>
+            
+            <div class="other-controls">
+                
+                <div class="undo-redo-group">
+                    <button class="btn btn-secondary" onclick="undo()" title="Undo (Ctrl+Z)">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="redo()" title="Redo (Ctrl+Y)">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas-container checkerboard">
+            <canvas id="pixel-canvas" aria-label="Pixel art drawing area"></canvas>
+            
+            <div class="reference-panel" id="reference-panel" style="display: none;">
+                <div class="reference-header">
+                    <strong>Reference</strong>
+                    <button onclick="hideReference()" class="close-btn" title="Close reference panel">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <img id="reference-image" class="reference-image" alt="Reference image">
+                <div class="reference-controls">
+                    <label>Opacity: </label>
+                    <input type="range" id="reference-opacity" min="1" max="100" value="50" title="Adjust reference opacity">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="panel-section">
+            <div class="panel-title">
+                <span>Colors</span>
+            </div>
+            <div class="current-color">
+                <div class="color-preview" id="current-color-preview" title="Current color"></div>
+                <input type="color" id="color-input" value="#000000" title="Select color">
+            </div>
+            <div class="color-palette" id="color-palette"></div>
+        </div>
+        
+
+        <div class="panel-section">
+            <div class="panel-title">
+                <span>Color Wheel</span>
+            </div>
+            <div class="color-wheel-container">
+                <div class="color-wheel" id="color-wheel" role="application" aria-label="Circular color picker">
+                    <div class="color-wheel-selector" id="color-wheel-selector"></div>
+                </div>
+                <div class="color-preview-wheel" id="color-preview-wheel" title="Selected color"></div>
+            </div>
+            <div class="color-values">
+                <div class="form-row">
+                    <input type="text" id="color-hex" class="form-input" placeholder="#RRGGBB" value="#ff0000" title="Color hexadecimal value">
+                    <input type="text" id="color-rgb" class="form-input" placeholder="rgb(r,g,b)" value="rgb(255,0,0)" title="Color RGB value">
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="panel-section">
+            <div class="panel-title">
+                <span>Palettes</span>
+                <div>
+                    <button class="btn btn-small" onclick="addCustomColor()" title="Add custom color">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="palettes-container" id="palettes-container"></div>
+            <div class="palette-actions">
+                <button class="btn btn-small" onclick="createNewPalette()" title="Create new palette">
+                    <i class="fas fa-plus"></i> New
+                </button>
+                <button class="btn btn-secondary btn-small" onclick="saveCurrentPalette()" title="Save current palette">
+                    <i class="fas fa-save"></i> Save
+                </button>
+            </div>
+        </div>
+        
+
+        <div class="panel-section">
+            <div class="panel-title">
+                <span>Layers</span>
+                <div>
+                    <button class="btn btn-small" onclick="addLayer()" title="Add new layer">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-small" onclick="removeLayer()" title="Remove selected layer">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="layer-list" id="layer-list"></div>
+        </div>
+        
+
+        <div class="panel-section">
+            <div class="panel-title">
+                <span>Layer Adjustments</span>
+            </div>
+            <div class="layer-advanced-controls">
+                <div class="layer-property">
+                    <label>Opacity:</label>
+                    <input type="range" class="layer-slider" id="layer-opacity" min="0" max="100" value="100" title="Adjust layer opacity">
+                    <span class="layer-value" id="layer-opacity-value">100%</span>
+                </div>
+                <div class="layer-property">
+                    <label>Brightness:</label>
+                    <input type="range" class="layer-slider" id="layer-brightness" min="-100" max="100" value="0" title="Adjust layer brightness">
+                    <span class="layer-value" id="layer-brightness-value">0%</span>
+                </div>
+                <div class="layer-property">
+                    <label>Contrast:</label>
+                    <input type="range" class="layer-slider" id="layer-contrast" min="-100" max="100" value="0" title="Adjust layer contrast">
+                    <span class="layer-value" id="layer-contrast-value">0%</span>
+                </div>
+                <div class="layer-property">
+                    <label>Hue:</label>
+                    <input type="range" class="layer-slider" id="layer-hue" min="-180" max="180" value="0" title="Adjust layer hue">
+                    <span class="layer-value" id="layer-hue-value">0°</span>
+                </div>
+                <button class="btn btn-small" onclick="resetLayerAdjustments()" title="Reset layer adjustments">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+        </div>
+        
+
+        <div class="panel-section">
+            <div class="panel-title">
+                <span>Outline (Sprite Border)</span>
+            </div>
+            <div class="outline-controls">
+                <div class="outline-options">
+                    <div class="outline-option active" onclick="selectOutlineStyle('solid')" title="Solid border">
+                        <i class="fas fa-square-full"></i>
+                        <span>Solid</span>
+                    </div>
+                    <div class="outline-option" onclick="selectOutlineStyle('dashed')" title="Dashed border">
+                        <i class="fas fa-grip-lines"></i>
+                        <span>Dashed</span>
+                    </div>
+                    <div class="outline-option" onclick="selectOutlineStyle('double')" title="Double border">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Double</span>
+                    </div>
+                    <div class="outline-option" onclick="selectOutlineStyle('gradient')" title="Gradient border">
+                        <i class="fas fa-fill-drip"></i>
+                        <span>Gradient</span>
+                    </div>
+                </div>
+                
+                <div class="layer-property">
+                    <label>Thickness:</label>
+                    <input type="range" class="layer-slider" id="outline-thickness" min="1" max="10" value="2" title="Adjust border thickness">
+                    <span class="layer-value" id="outline-thickness-value">2px</span>
+                </div>
+                
+                <div class="layer-property">
+                    <label>Color:</label>
+                    <input type="color" id="outline-color" value="#ffffff" title="Select border color">
+                </div>
+                
+                <div class="form-row">
+                    <button class="btn btn-small" onclick="applyOutlineToLayer()" title="Apply border to current layer">
+                        <i class="fas fa-paint-brush"></i> Apply to Layer
+                    </button>
+                    <button class="btn btn-secondary btn-small" onclick="applyOutlineToSelection()" title="Apply border to selection">
+                        <i class="fas fa-mouse-pointer"></i> Apply to Selection
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="panel-section">
+            <div class="panel-title">
+                <span>Timeline</span>
+                <div>
+                    <button class="btn btn-small" onclick="addFrame()" title="Add new frame">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-small" onclick="removeFrame()" title="Remove selected frame">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="frames-container" id="frames-container"></div>
+            
+            <div class="frame-controls">
+                <button class="btn btn-small" onclick="previousFrame()" title="Previous frame">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="btn btn-small" onclick="playAnimation()" id="play-btn" title="Play animation">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="btn btn-small" onclick="nextFrame()" title="Next frame">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+            </div>
+            
+            <div class="timeline-controls">
+                <div class="frame-counter" id="frame-counter">1/1</div>
+                <button class="timeline-btn" onclick="toggleLoop()" id="loop-btn" title="Toggle loop">
+                    <i class="fas fa-infinity"></i> Loop
+                </button>
+                <button class="timeline-btn" onclick="togglePingPong()" id="pingpong-btn" title="Toggle ping-pong mode">
+                    <i class="fas fa-exchange-alt"></i> Ping-Pong
+                </button>
+            </div>
+            
+            <div class="fps-control">
+                <label>FPS: <span id="fps-value">12</span></label>
+                <input type="range" id="fps-slider" min="1" max="30" value="12" title="Adjust frames per second">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="status-bar">
+    <div id="cursor-position">X: 0, Y: 0</div>
+    <div id="document-size">64x64 pixels</div>
+    <div id="tool-info">Tool: Pencil</div>
+    <div id="zoom-info">Zoom: 100%</div>
+</div>
+
+
+<div class="modal" id="new-project-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-plus-circle"></i> New Pixel Art Project</h2>
+        </div>
+        
+        <div class="modal-body">
+            <div class="modal-column">
+                <div class="modal-section">
+                    <div class="section-title"><i class="fas fa-expand-alt"></i> Canvas Size</div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Quick Presets:</label>
+                        <div class="presets-grid">
+                            <div class="preset-btn active" data-width="16" data-height="16" title="Icon size">
+                                <span class="size">16×16</span>
+                                <span class="desc">Icon</span>
+                            </div>
+                            <div class="preset-btn" data-width="32" data-height="32" title="Sprite size">
+                                <span class="size">32×32</span>
+                                <span class="desc">Sprite</span>
+                            </div>
+                            <div class="preset-btn" data-width="64" data-height="64" title="Character size">
+                                <span class="size">64×64</span>
+                                <span class="desc">Character</span>
+                            </div>
+                            <div class="preset-btn" data-width="128" data-height="128" title="Art size">
+                                <span class="size">128×128</span>
+                                <span class="desc">Art</span>
+                            </div>
+                            <div class="preset-btn" data-width="256" data-height="256" title="HD size">
+                                <span class="size">256×256</span>
+                                <span class="desc">HD</span>
+                            </div>
+                            <div class="preset-btn" data-width="512" data-height="512" title="Wallpaper size">
+                                <span class="size">512×512</span>
+                                <span class="desc">Wallpaper</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Custom Dimensions:</label>
+                        <div class="form-row">
+                            <input type="number" id="project-width" class="form-input form-input-small" value="64" min="8" max="2048" title="Canvas width">
+                            <span>×</span>
+                            <input type="number" id="project-height" class="form-input form-input-small" value="64" min="8" max="2048" title="Canvas height">
+                            <span>pixels</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Aspect Ratio:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="ratio" value="1:1" checked>
+                                <span class="radio-custom"></span>
+                                Square (1:1)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="ratio" value="16:9">
+                                <span class="radio-custom"></span>
+                                Widescreen (16:9)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="ratio" value="4:3">
+                                <span class="radio-custom"></span>
+                                Standard (4:3)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <div class="section-title"><i class="fas fa-palette"></i> Color Settings</div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Background Color:</label>
+                        <div class="form-row">
+                            <input type="color" id="project-bg-color" value="#333333" title="Select background color">
+                            <input type="text" id="project-bg-hex" class="form-input" value="#333333" title="Background color hex code">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Color Mode:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="color-mode" value="rgb" checked>
+                                <span class="radio-custom"></span>
+                                RGB (True Color)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="color-mode" value="indexed">
+                                <span class="radio-custom"></span>
+                                Indexed (256 colors)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-column">
+                <div class="modal-section">
+                    <div class="section-title"><i class="fas fa-eye"></i> Preview</div>
+                    <div class="preview-section">
+                        <div class="preview-canvas" id="project-preview" aria-label="Canvas size preview"></div>
+                        <div class="preview-info" id="preview-info">
+                            Size: 64×64px | Memory: 4KB
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <div class="section-title"><i class="fas fa-square"></i> Pixel Settings</div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Pixel Display Size:</label>
+                        <input type="range" id="project-pixel-size" class="form-input" min="1" max="20" value="8" title="Adjust pixel display size">
+                        <div class="form-row">
+                            <span id="pixel-size-value">8px</span>
+                            <span class="preview-zoom-label">Zoom: <span id="preview-zoom">800%</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Initial Settings:</label>
+                        <div class="form-row">
+                            <label class="radio-label">
+                                <input type="checkbox" id="enable-grid" checked>
+                                <span class="radio-custom checkbox"></span>
+                                Visible Grid
+                            </label>
+                            <label class="radio-label">
+                                <input type="checkbox" id="enable-ruler">
+                                <span class="radio-custom checkbox"></span>
+                                Rulers
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="section-title"><i class="fas fa-magic"></i> Advanced Presets</div>
+                    <div class="grid-presets">
+                        <div class="grid-preset" onclick="applyPreset('pixelart')" title="Basic pixel art preset">
+                            <i class="fas fa-gamepad"></i>
+                            <div>Pixel Art</div>
+                        </div>
+                        <div class="grid-preset" onclick="applyPreset('isometric')" title="Isometric grid preset">
+                            <i class="fas fa-cube"></i>
+                            <div>Isometric</div>
+                        </div>
+                        <div class="grid-preset" onclick="applyPreset('ui')" title="User interface preset">
+                            <i class="fas fa-desktop"></i>
+                            <div>UI</div>
+                        </div>
+                        <div class="grid-preset" onclick="applyPreset('animation')" title="Animation preset">
+                            <i class="fas fa-film"></i>
+                            <div>Animation</div>
+                        </div>
+                        <div class="grid-preset" onclick="applyPreset('retro')" title="Retro style preset">
+                            <i class="fas fa-gamepad"></i>
+                            <div>Retro</div>
+                        </div>
+                        <div class="grid-preset" onclick="applyPreset('modern')" title="Modern style preset">
+                            <i class="fas fa-star"></i>
+                            <div>Modern</div>
+                        </div>
+                        <div class="grid-preset" onclick="applyPreset('minimal')" title="Minimalist preset">
+                            <i class="fas fa-minimize"></i>
+                            <div>Minimalist</div>
+                        </div>
+                        <div class="grid-preset" onclick="applyPreset('detailed')" title="Detailed preset">
+                            <i class="fas fa-expand"></i>
+                            <div>Detailed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="advanced-settings" id="advanced-settings" style="display: none;">
+                <div class="section-title"><i class="fas fa-cogs"></i> Advanced Settings</div>
+                
+                <div class="form-row">
+                    <div class="form-group-advanced">
+                        <label>Workspace:</label>
+                        <select class="form-input" id="workspace-preset">
+                            <option value="basic">Basic (1 layer, 1 frame)</option>
+                            <option value="animation">Animation (1 layer, 10 frames)</option>
+                            <option value="multilayer">Multi-layer (3 layers, 1 frame)</option>
+                            <option value="complex">Complex (5 layers, 24 frames)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group-advanced">
+                        <label>Default FPS:</label>
+                        <input type="number" id="default-fps" class="form-input" value="12" min="1" max="60">
+                    </div>
+                </div>
+                
+                <div class="form-group-advanced">
+                    <label>Template:</label>
+                    <select class="form-input" id="project-template">
+                        <option value="blank">Blank Canvas</option>
+                        <option value="pixelart">Pixel Art</option>
+                        <option value="game">Game Sprite</option>
+                        <option value="ui">User Interface</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="advanced-toggle" onclick="toggleAdvancedSettings()" title="Show/hide advanced settings">
+                <i class="fas fa-sliders-h"></i> Advanced Settings
+            </button>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideModal('new-project-modal')" title="Cancel project creation">Cancel</button>
+                <button class="btn" onclick="createNewProject()" title="Create new project with selected settings">
+                    <i class="fas fa-plus-circle"></i> Create Project
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="high-res-export-modal">
+    <div class="modal-content export-high-res-modal">
+        <div class="modal-header">
+            <h2><i class="fas fa-expand-arrows-alt"></i> Export High Resolution</h2>
+        </div>
+        <div class="modal-body">
+            <div class="export-options-grid">
+                <div class="export-option active" onclick="selectExportOption(this, 'single')" data-type="single" title="Export only current frame">
+                    <div class="icon"><i class="fas fa-image"></i></div>
+                    <h4>Current Frame</h4>
+                    <p>Export only the selected frame</p>
+                </div>
+                <div class="export-option" onclick="selectExportOption(this, 'all')" data-type="all" title="Export all frames">
+                    <div class="icon"><i class="fas fa-th-large"></i></div>
+                    <h4>All Frames</h4>
+                    <p>Export all frames as sprite sheet</p>
+                </div>
+                <div class="export-option" onclick="selectExportOption(this, 'animation')" data-type="animation" title="Export as animated GIF">
+                    <div class="icon"><i class="fas fa-film"></i></div>
+                    <h4>Animation</h4>
+                    <p>Export as animated GIF (only visible frames)</p>
+                </div>
+                <div class="export-option" onclick="selectExportOption(this, 'layers')" data-type="layers" title="Export separate layers">
+                    <div class="icon"><i class="fas fa-layer-group"></i></div>
+                    <h4>Separate Layers</h4>
+                    <p>Export each layer as separate image</p>
+                </div>
+            </div>
+            
+            <div class="resolution-controls">
+                <div class="resolution-value">
+                    <span>Resolution:</span>
+                    <span id="resolution-value">4x (256×256)</span>
+                </div>
+                <div class="resolution-slider">
+                    <input type="range" id="export-scale" min="1" max="20" value="4" title="Adjust export scale">
+                </div>
+                <div class="resolution-labels">
+                    <span>1× (64px)</span>
+                    <span>10× (640px)</span>
+                    <span>20× (1280px)</span>
+                </div>
+            </div>
+            
+            <div class="format-options">
+                <div class="format-option active" onclick="selectFormat(this, 'png')" title="PNG format with transparency">
+                    PNG (Transparent)
+                </div>
+                <div class="format-option" onclick="selectFormat(this, 'jpeg')" title="JPEG format with high quality">
+                    JPEG (High quality)
+                </div>
+                <div class="format-option" onclick="selectFormat(this, 'webp')" title="Compact WebP format">
+                    WebP (Compact)
+                </div>
+                <div class="format-option" onclick="selectFormat(this, 'gif')" id="gif-option" title="Animated GIF format">
+                    GIF (Animated)
+                </div>
+            </div>
+            
+            <div id="quality-controls">
+                <label>JPEG/WebP Quality:</label>
+                <input type="range" id="export-quality" min="0.1" max="1" step="0.1" value="0.9" title="Adjust image quality">
+                <div class="quality-labels">
+                    <span>Low</span>
+                    <span id="quality-value">90%</span>
+                    <span>High</span>
+                </div>
+            </div>
+            
+            <div id="gif-controls" style="display: none;">
+                <label>GIF Settings:</label>
+                <div class="gif-settings">
+                    <div>
+                        <label>Repeat</label>
+                        <select id="gif-loop" title="Set GIF repeat count">
+                            <option value="0">Infinite</option>
+                            <option value="1">1 time</option>
+                            <option value="2">2 times</option>
+                            <option value="3">3 times</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Delay per frame (ms)</label>
+                        <input type="number" id="gif-delay" value="100" min="10" max="1000" step="10" title="Set delay between frames in milliseconds">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideModal('high-res-export-modal')" title="Cancel export">
+                    Cancel
+                </button>
+                <button class="btn" onclick="exportHighResolution()" title="Export with selected settings">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="galeriaPixelArt" class="galeria-overlay" style="display: none;" role="dialog" aria-labelledby="galeria-titulo" aria-modal="true">
+    <div class="galeria-content">
+
+        <div class="galeria-header">
+            <h2 id="galeria-titulo"><i class="fas fa-images"></i> PROJECT GALLERY</h2>
+            <div class="galeria-header-actions">
+                <button class="galeria-btn-refresh" onclick="atualizarGaleriaPixelArt()" title="Refresh gallery">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button onclick="fecharGaleriaPixelArt()" class="galeria-close-btn" title="Close gallery (ESC)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+
+        <div class="galeria-controls">
+            <div class="galeria-search">
+                <input type="text" id="galeria-search-input" placeholder="🔍 Search projects..." 
+                       oninput="filtrarProjetosGaleria(this.value)">
+            </div>
+            <div class="galeria-stats" id="galeria-stats">
+                Loading...
+            </div>
+        </div>
+        
+
+        <div class="galeria-body">
+            <div id="galeria-projetos" class="projetos-container">
+
+                <div class="loading-projetos">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="galeria-footer">
+            <div class="galeria-actions">
+                <button onclick="exportarTodosProjetos()" class="btn-galeria btn-export">
+                    <i class="fas fa-download"></i> Export All
+                </button>
+                <button onclick="importarProjetos()" class="btn-galeria btn-import">
+                    <i class="fas fa-upload"></i> Import
+                </button>
+                <button onclick="limparTodosProjetos()" class="btn-galeria btn-clear">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+            <div class="galeria-info">
+                <span id="galeria-contador">0 project(s)</span>
+                <span class="galeria-hint">Click to load • Right click for menu</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button id="galeria-main-btn" style="display: none;">
+    <i class="fas fa-images"></i>
+</button>
+
+<script src="js/script.js"></script>
+<script src="js/pixel-gallery.js"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        console.log('Pixel Art Editor ready!');
+    });
+</script>
+</body>
+</html>
