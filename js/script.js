@@ -2600,19 +2600,19 @@ createShapeToolsUI() {
     
     shapeTools.innerHTML = `
         <button class="btn-small" onclick="deleteActiveShape()" title="Delete">
-            <i class="fas fa-trash"></i> Apagar Forma
+            <i class="fas fa-trash"></i> Delete Shape
         </button>
         <button class="btn-small" onclick="duplicateShape()" title="Duplicate">
-            <i class="fas fa-copy"></i> Duplicar
+            <i class="fas fa-copy"></i> Duplicate
         </button>
         <button class="btn-small" onclick="toggleShapeFill()" title="Toggle Fill">
-            <i class="fas fa-fill"></i> Alternar Preenchimento
+            <i class="fas fa-fill"></i> Toggle Fill
         </button>
         <button class="btn-small" onclick="changeShapeColor()" title="Change Color">
-            <i class="fas fa-palette"></i> Mudar Cor
+            <i class="fas fa-palette"></i> Change Color
         </button>
         <button class="btn-small" onclick="clearAllShapes()" title="Clear All">
-            <i class="fas fa-times"></i> Limpar Todas
+            <i class="fas fa-times"></i> Clear All
         </button>
     `;
     
@@ -7146,14 +7146,21 @@ createShapeMenu() {
     menu.style.cssText = `
         position: fixed;
         display: none;
-        background: #2d2d2d;
+        
         border: 1px solid #555;
         border-radius: 8px;
         padding: 8px;
         z-index: 10000;
+        margin-left: -105px !important;
         grid-template-columns: repeat(5, 40px);
         gap: 4px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                background: rgba(32, 33, 37, 0.75) !important;
+        backdrop - filter: blur(3 px) !important; -
+        webkit - backdrop - filter: blur(10 px) !important;
+        border: 3 px solid rgba(0, 0, 0, 0.3) !important;
+        box - shadow:
+            inset 0 0 0 2 px rgba(73, 75, 78, 0.3),
+            0 3 px 0 rgba(0, 0, 0, 0.3) !important;
     `;
     
     // buttons for each shape
@@ -7168,8 +7175,8 @@ createShapeMenu() {
             height: 40px;
             border: 2px solid transparent;
             border-radius: 4px;
-            background: #3d3d3d;
-            color: white;
+            background: #282A30;
+            color: #AEAEAE;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -7214,10 +7221,10 @@ createShapeMenu() {
     fillToggle.className = 'shape-fill-toggle';
     fillToggle.innerHTML = `
         <i class="fas fa-fill"></i>
-        <span>${this.shapeTool.filled ? 'Preenchido' : 'Vazado'}</span>
+        <span>${this.shapeTool.filled ? 'Filled' : 'Leaked'}</span>
     `;
     fillToggle.style.cssText = `
-        background: ${this.shapeTool.filled ? '#4CAF50' : '#666'};
+        background: ${this.shapeTool.filled ? '#282A30' : '#666'};
         color: white;
         border: none;
         border-radius: 4px;
@@ -7234,7 +7241,7 @@ createShapeMenu() {
         fillToggle.style.background = this.shapeTool.filled ? '#4CAF50' : '#666';
         fillToggle.innerHTML = `
             <i class="fas ${this.shapeTool.filled ? 'fa-fill' : 'fa-square'}"></i>
-            <span>${this.shapeTool.filled ? 'Preenchido' : 'Vazado'}</span>
+            <span>${this.shapeTool.filled ? 'Filled' : 'Leaked'}</span>
         `;
     });
     
