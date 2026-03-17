@@ -1958,19 +1958,19 @@ setupSelectionToolsUI() {
     
     selectionTools.innerHTML = `
         <button class="btn-small" onclick="copySelection()" title="Ctrl+C">
-            <i class="fas fa-copy"></i> Copiar
+            <i class="fas fa-copy"></i> Copy
         </button>
         <button class="btn-small" onclick="pasteSelection()" title="Ctrl+V">
-            <i class="fas fa-paste"></i> Colar
+            <i class="fas fa-paste"></i> To paste
         </button>
         <button class="btn-small" onclick="cutSelection()" title="Ctrl+X">
-            <i class="fas fa-cut"></i> Recortar
+            <i class="fas fa-cut"></i> Cut out
         </button>
         <button class="btn-small" onclick="deleteSelection()" title="Delete">
-            <i class="fas fa-trash"></i> Apagar
+            <i class="fas fa-trash"></i> To switch off
         </button>
         <button class="btn-small" onclick="clearSelection()" title="Esc">
-            <i class="fas fa-times"></i> Cancelar
+            <i class="fas fa-times"></i> Cancel
         </button>
         <div style="width: 100%; height: 1px; background: #555; margin: 5px 0;"></div>
         <button class="btn-small" onclick="flipSelectionHorizontal()" title="Flip Horizontal">
@@ -1980,7 +1980,7 @@ setupSelectionToolsUI() {
             <i class="fas fa-arrows-alt-v"></i> Vertical
         </button>
         <button class="btn-small" onclick="rotateSelection90()" title="Rotate 90°">
-            <i class="fas fa-redo"></i> Girar 90°
+            <i class="fas fa-redo"></i> Rotate 90°
         </button>
     `;
     
@@ -9608,3 +9608,102 @@ document.addEventListener('DOMContentLoaded', function() {
 function applyQuickGradient() {
     if (editor) editor.applyQuickGradient();
 }
+
+
+// ========== The function that erases the entire drawing ==========
+
+
+function confirmClearAll() {
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-modal-overlay';
+    overlay.id = 'clear-confirm-overlay';
+    
+    overlay.innerHTML = `
+        <div class="confirm-modal">
+            <h3>
+                <i class="fas fa-trash-alt"></i>
+                Clear everything?
+            </h3>
+            <p>
+                Are you sure you want to clear <strong>the entire drawing</strong>?<br>
+                This action cannot be undone!
+            </p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn cancel" id="cancel-clear">
+                    
+                    Cancel
+                </button>
+                <button class="confirm-btn confirm" id="confirm-clear">
+
+                    Clear All
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    document.getElementById('cancel-clear').addEventListener('click', () => {
+        overlay.remove();
+    });
+    
+    document.getElementById('confirm-clear').addEventListener('click', () => {
+        clearAllDrawings();
+        overlay.remove();
+    });
+    
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.remove();
+        }
+    });
+    
+    const escHandler = (e) => {
+        if (e.key === 'Escape') {
+            overlay.remove();
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+}
+
+function clearAllDrawings() {
+    if (!editor) return;
+    
+    editor.saveState();
+    
+    if (editor.isPlaying) {
+        editor.stopAnimation();
+    }
+    
+    editor.frames.forEach((frame) => {
+        frame.layers.forEach((layer) => {
+            layer.ctx.clearRect(0, 0, editor.canvasSize, editor.canvasSize);
+        });
+    });
+    
+    if (editor.activeShapes) {
+        editor.activeShapes = [];
+    }
+    if (editor.activeShape) {
+        editor.activeShape = null;
+    }
+    
+    if (editor.selection && editor.selection.active) {
+        editor.clearSelection();
+    }
+    
+    editor.updateAllThumbnails();
+    editor.updateCanvas();
+    
+
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Delete') {
+        e.preventDefault();
+        if (editor) {
+            confirmClearAll();
+        }
+    }
+});

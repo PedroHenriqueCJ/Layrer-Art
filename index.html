@@ -242,54 +242,58 @@
         </div>
     </div>
 
-    <div class="workspace">
-        <div class="workspace-controls">
+  <div class="workspace">
+    <div class="workspace-controls">
 
-            <div class="zoom-controls">
-                <button class="btn mobile-zoom-btn" onclick="zoomOut()" title="Zoom out (Pinch)">
-                    <i class="fas fa-search-minus"></i>
-                </button>
-                <span id="zoom-level">100%</span>
-                <button class="btn mobile-zoom-btn" onclick="zoomIn()" title="Zoom in (Pinch)">
-                    <i class="fas fa-search-plus"></i>
-                </button>
-                <button class="btn btn-secondary mobile-fit-btn" onclick="fitToScreen()" title="Fit to screen size">
-                    <i class="fas fa-expand-alt"></i>
-                </button>
-            </div>
-            
-            
-            <div class="brush-controls">
-                <div class="slider-container">
-                    <label>Pencil: <span id="brush-size-value">1</span></label>
-                    <input type="range" id="brush-size" min="1" max="32" value="1" 
-                           title="Adjust brush size" class="brush-slider">
-                </div>
-            </div>
-            
-            <div class="pan-controls-stacked">
-                <button class="btn" onclick="togglePanMode()" id="pan-toggle-btn" title="Toggle pan mode (Ctrl+P)">
-                    <i class="fas fa-hand-paper"></i>
-                    <span>Move</span>
-                </button>
-                <button class="btn btn-secondary" onclick="resetPanPosition()" title="Center canvas">
-                    <i class="fas fa-crosshairs"></i>
-                    <span>Centralize</span>
-                </button>
-            </div>
-            
-            <div class="other-controls">
-                
-                <div class="undo-redo-group">
-                    <button class="btn btn-secondary" onclick="undo()" title="Undo (Ctrl+Z)">
-                        <i class="fas fa-undo"></i>
-                    </button>
-                    <button class="btn btn-secondary" onclick="redo()" title="Redo (Ctrl+Y)">
-                        <i class="fas fa-redo"></i>
-                    </button>
-                </div>
+        <div class="zoom-controls">
+            <button class="btn mobile-zoom-btn" onclick="zoomOut()" title="Zoom out (Pinch)">
+                <i class="fas fa-search-minus"></i>
+            </button>
+            <span id="zoom-level">100%</span>
+            <button class="btn mobile-zoom-btn" onclick="zoomIn()" title="Zoom in (Pinch)">
+                <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="btn btn-secondary mobile-fit-btn" onclick="fitToScreen()" title="Fit to screen size">
+                <i class="fas fa-expand-alt"></i>
+            </button>
+        </div>
+        
+        <div class="brush-controls">
+            <div class="slider-container">
+                <label>Pencil: <span id="brush-size-value">1</span></label>
+                <input type="range" id="brush-size" min="1" max="32" value="1" 
+                       title="Adjust brush size" class="brush-slider">
             </div>
         </div>
+        
+        <div class="pan-controls-stacked">
+            <button class="btn" onclick="togglePanMode()" id="pan-toggle-btn" title="Toggle pan mode (Ctrl+P)">
+                <i class="fas fa-hand-paper"></i>
+                <span>Move</span>
+            </button>
+            <button class="btn btn-secondary" onclick="resetPanPosition()" title="Center canvas">
+                <i class="fas fa-crosshairs"></i>
+                <span>Centralize</span>
+            </button>
+        </div>
+        
+        <div class="other-controls">
+            <div class="undo-redo-group">
+                <button class="btn btn-secondary" onclick="undo()" title="Undo (Ctrl+Z)">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="btn btn-secondary" onclick="redo()" title="Redo (Ctrl+Y)">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            
+
+            <button class="btn btn-danger" id="clear-all-btn" onclick="confirmClearAll()" title="Erase the entire drawing">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        
+    </div> 
 
         <div class="canvas-container checkerboard">
             <canvas id="pixel-canvas" aria-label="Pixel art drawing area"></canvas>
