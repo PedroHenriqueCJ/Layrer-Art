@@ -60,6 +60,13 @@ body {
     overflow-x: hidden;
 }
 
+.seo-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 /* ========== HEADER ========== */
 header {
     background: var(--main-color);
